@@ -1,0 +1,52 @@
+{
+	"name": "json-paradise",
+	"displayName": "JSON Paradise",
+	"description": "Custom JSON Editor",
+	"version": "0.0.1",
+	"publisher": "soloham",
+	"private": true,
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/soloham/json-paradise"
+	},
+	"engines": {
+		"vscode": "^1.52.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onCustomEditor:jsonParadise.gridEditor"
+	],
+	"main": "./out/extension.js",
+	"contributes": {
+		"customEditors": [
+			{
+				"viewType": "jsonParadise.gridEditor",
+				"displayName": "JSON Grid Editor",
+				"selector": [
+					{
+						"filenamePattern": "*.json"
+					}
+				],
+				"priority": "option"
+			}
+		]
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"lint": "eslint . --ext .ts,.tsx",
+		"watch": "tsc -w -p ./"
+	},
+	"devDependencies": {
+		"@types/node": "^12.12.0",
+		"@types/vscode": "^1.52.0",
+		"@typescript-eslint/eslint-plugin": "^4.16.0",
+		"@typescript-eslint/parser": "^4.16.0",
+		"eslint": "^7.21.0",
+		"typescript": "^4.3.5"
+	},
+	"dependencies": {}
+}
