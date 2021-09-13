@@ -67,7 +67,7 @@ export class GridEditorProvider implements vscode.CustomTextEditorProvider {
 		// Remember that a single text document can also be shared between multiple custom
 		// editors (this happens for example when you split a custom editor)
 
-		const changeDocumentSubscription = vscode.workspace.onDidChangeTextDocument(e => {
+		const changeDocumentSubscription = vscode.workspace.onDidChangeTextDocument((e: any) => {
 			if (e.document.uri.toString() === document.uri.toString()) {
 				updateWebview();
 			}

@@ -1,22 +1,103 @@
 <template>
-  <div class="q-mt-md">
+  <div class="q-mt-md full-height">
+    <q-markup-table v-if="loadingData">
+      <thead>
+        <tr>
+          <th class="text-left" style="width: 150px">
+            <q-skeleton animation="blink" type="text" />
+          </th>
+          <th class="text-right">
+            <q-skeleton animation="blink" type="text" />
+          </th>
+          <th class="text-right">
+            <q-skeleton animation="blink" type="text" />
+          </th>
+          <th class="text-right">
+            <q-skeleton animation="blink" type="text" />
+          </th>
+          <th class="text-right">
+            <q-skeleton animation="blink" type="text" />
+          </th>
+          <th class="text-right">
+            <q-skeleton animation="blink" type="text" />
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr v-for="n in 5" :key="n">
+          <td class="text-left">
+            <q-skeleton animation="blink" type="text" width="85px" />
+          </td>
+          <td class="text-right">
+            <q-skeleton animation="blink" type="text" width="50px" />
+          </td>
+          <td class="text-right">
+            <q-skeleton animation="blink" type="text" width="35px" />
+          </td>
+          <td class="text-right">
+            <q-skeleton animation="blink" type="text" width="65px" />
+          </td>
+          <td class="text-right">
+            <q-skeleton animation="blink" type="text" width="25px" />
+          </td>
+          <td class="text-right">
+            <q-skeleton animation="blink" type="text" width="85px" />
+          </td>
+        </tr>
+      </tbody>
+    </q-markup-table>
+
     <q-table
+      v-else
+      class="full-height"
       :title="name"
       :rows="rows"
       :columns="columns"
       row-key="name"
-      binary-state-sort
+      virtual-scroll
+      wrap-cells
+      :filter="filter"
+      :selected="selectedRow"
+      :pagination="pagination"
+      :rows-per-page-options="[0]"
     >
+      <template v-slot:top>
+        <div class="q-table__title q-mr-md">{{ name }}</div>
+        <q-btn
+          color="primary"
+          round
+          icon="add"
+          size="xs"
+          :disable="loading"
+          @click="addRow"
+        />
+        <q-space />
+        <q-input
+          borderless
+          dense
+          debounce="300"
+          color="primary"
+          v-model="filter"
+        >
+          <template v-slot:append>
+            <q-icon name="search" />
+          </template>
+        </q-input>
+      </template>
       <template v-slot:body="props">
         <q-tr :props="props">
           <q-td v-for="key of columns" :key="key.name" :props="props">
             {{ props.row[key.name] }}
             <q-popup-edit
-              v-model="props.row[key.name]"
-              @hide="savetextDocument"
+              :model-value="props.row[key.name]"
+              @update:model-value="saveValue"
+              @hide="saveTextDocument"
             >
               <q-input
-                v-model="props.row[key.name]"
+                :model-value="props.row[key.name]"
+                @update:model-value="saveValue($event, props.row, key.name)"
+                :type="getColType(props.row[key.name])"
                 dense
                 autofocus
                 auto-save
@@ -44,10 +125,18 @@ const vscode =
 export default {
   name: "Main",
   setup() {
-    const name = ref("");
+    const name = ref("JSON");
     const firstElement = computed(() =>
       Object.keys(text.value).find((x) => Array.isArray(text.value[x]))
     );
+
+    const loading = ref(false);
+    const loadingData = ref(true);
+    const filter = ref("");
+    const selectedRow = ref();
+    const pagination = ref({
+      rowsPerPage: 0,
+    });
     const columns = computed(() => {
       const headers = Object.keys(text.value[firstElement.value][0]);
       return headers?.map((x) => ({
@@ -103,12 +192,60 @@ export default {
 
     const textDocument = ref(null);
 
+    const addRow = () => {
+      loading.value = true;
+
+      let index = rows.value.indexOf(selectedRow.value);
+      index = index === -1 ? rows.value.length : index;
+
+      const newRow = { ...rows.value[index - 1] };
+
+      text.value[firstElement.value] = [
+        ...rows.value.slice(0, index),
+        newRow,
+        ...rows.value.slice(index),
+      ];
+
+      console.log(rows.value);
+
+      loading.value = false;
+    };
+
+    const removeRow = () => {
+      loading.value = true;
+      let index = rows.value.indexOf(selectedRow.value);
+      index = index === -1 ? rows.value.length : index;
+      text.value[firstElement.value] = [
+        ...rows.value.slice(0, index),
+        ...rows.value.slice(index + 1),
+      ];
+      loading.value = false;
+    };
+
+    const getColType = (value) => {
+      if (typeof value === "number") {
+        return "number";
+      } else {
+        return "text";
+      }
+    };
+
+    const saveValue = (value, object, key) => {
+      const type = getColType(object[key]);
+      if (type === "number") {
+        object[key] = parseInt(value);
+      } else {
+        object[key] = value;
+      }
+    };
+
     // Handle messages sent from the extension to the webview
     onMounted(() => {
       handleMessages();
       // @ts-ignore
-      const htmlEle = document.getElementsByName("html");
-      console.log(htmlEle);
+      const htmlEle = document.documentElement;
+      htmlEle.style.height = "98%";
+      htmlEle.style.display = "grid";
     });
 
     const handleMessages = () => {
@@ -127,12 +264,13 @@ export default {
               message.name.lastIndexOf("\\") + 1
             );
 
+            loadingData.value = false;
             return;
         }
       });
     };
 
-    const savetextDocument = () => {
+    const saveTextDocument = () => {
       vscode.postMessage({
         type: "save",
         text: Hjson.stringify(text.value, {
@@ -145,11 +283,19 @@ export default {
     };
 
     return {
+      loading,
+      filter,
       columns,
       rows,
+      addRow,
+      removeRow,
+      getColType,
       text,
       name,
-      savetextDocument,
+      saveTextDocument,
+      pagination,
+      selectedRow,
+      saveValue,
     };
   },
 };
