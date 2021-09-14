@@ -24,7 +24,7 @@ export class GridEditorProvider implements vscode.CustomTextEditorProvider {
 		return providerRegistration;
 	}
 
-	private static readonly viewType = 'jsonParadise.gridEditor';
+	private static readonly viewType = 'jsonTable.tableEditor';
 
 	constructor(
 		private readonly context: vscode.ExtensionContext

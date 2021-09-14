@@ -1,14 +1,14 @@
 {
-	"name": "json-paradise",
-	"displayName": "JSON Paradise",
-	"description": "Custom JSON Editor",
-	"version": "0.0.1",
+	"name": "json-table",
+	"displayName": "JSON Table",
+	"description": "JSON Editor",
+	"version": "0.0.2",
 	"publisher": "soloham",
 	"private": true,
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/soloham/json-paradise"
+		"url": "https://github.com/soloham/json-table"
 	},
 	"engines": {
 		"vscode": "^1.52.0"
@@ -17,14 +17,14 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCustomEditor:jsonParadise.gridEditor"
+		"onCustomEditor:jsonTable.tableEditor"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"customEditors": [
 			{
-				"viewType": "jsonParadise.gridEditor",
-				"displayName": "JSON Grid Editor",
+				"viewType": "jsonTable.tableEditor",
+				"displayName": "JSON Table Editor",
 				"selector": [
 					{
 						"filenamePattern": "*.json"
