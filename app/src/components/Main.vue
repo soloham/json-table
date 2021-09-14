@@ -170,7 +170,7 @@ export default {
         ...rows.value.slice(index),
       ];
 
-      console.log(rows.value);
+      saveTextDocument();
 
       loading.value = false;
     };

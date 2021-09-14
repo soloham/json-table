@@ -1,25 +1,9 @@
-# Cat Customs - Custom Editor API Samples
+# JSON Paradise - JSON Grid Editor
 
-![Paw draw editor ](documentation/example.png)
+![JSON Grid Editor ](documentation/example.png)
 
-Demonstrates VS Code's [custom editor API](https://code.visualstudio.com/api/extension-guides/custom-editors) using two custom editors:
+Demonstrates [JSON Grid Editor](https://github.com/SoloHam/json-paradise) using a custom editor:
 
-- Cat Scratch — Uses the finalized custom text editor api to provide a custom editor for `.cscratch` files (which are just json files)
-- Paw Draw - Uses the binary custom editor api to provide a custom editor for `.pawdraw` files (which are just png files with a different file extension).
-
-## VS Code API
-
-### `vscode` module
-
-- [`window.registerCustomEditorProvider`](https://code.visualstudio.com/api/references/vscode-api#window.registerCustomEditorProvider)
-- [`CustomTextEditor`](https://code.visualstudio.com/api/references/vscode-api#CustomTextEditor)
-- [`CustomEditor`](https://code.visualstudio.com/api/references/vscode-api#CustomEditor)
-
-## Running the example
-
-- Open this example in VS Code 1.46+
-- `npm install`
-- `npm run watch` or `npm run compile`
-- `F5` to start debugging
-
-Open the example files from the `exampleFiles` directory.
+- Provides a custom editor for `.json` files
+- The JSON Grid Editor can be invoked from the context menu of a JSON file, by choosing "JSON Grid Editor" in the Open With options
+- The grid allows sorting, filtering and inline editing
