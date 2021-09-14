@@ -152,43 +152,7 @@ export default {
 
     const rows = computed(() => text.value[firstElement.value]);
 
-    const text = ref(
-      JSON.parse(`{
-        "$schema": "../../../seeddata.schema.json",
-        "SeedData": [
-            {
-                "Id": 1,
-                "Name": "'HSBC'",
-                "BankCode": "'TBD'"
-            },
-            {
-                "Id": 2,
-                "Name": "'Barclays'",
-                "BankCode": "'TBD'"
-            },
-            {
-                "Id": 3,
-                "Name": "'Lloyds'",
-                "BankCode": "'TBD'"
-            },
-            {
-                "Id": 4,
-                "Name": "'Citibank'",
-                "BankCode": "'TBD'"
-            },
-            {
-                "Id": 5,
-                "Name": "'Bank of America'",
-                "BankCode": "'TBD'"
-            },
-            {
-                "Id": 6,
-                "Name": "'Meryll-Lynch'",
-                "BankCode": "'TBD'"
-            }
-        ]
-    }`)
-    );
+    const text = ref();
 
     const textDocument = ref(null);
 
