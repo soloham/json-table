@@ -2,7 +2,7 @@
 	"name": "json-table",
 	"displayName": "JSON Table",
 	"description": "JSON Editor",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"publisher": "soloham",
 	"private": true,
 	"license": "MIT",
