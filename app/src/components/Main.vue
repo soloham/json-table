@@ -50,7 +50,7 @@
 
     <q-table
       v-else
-      class="full-height"
+      class="sticky-header-table full-height"
       :title="name"
       :rows="rows"
       :columns="columns"
@@ -74,9 +74,11 @@
         />
         <q-space />
         <q-input
-          borderless
           dense
-          debounce="300"
+          filled
+          clearable
+          clear-icon="close"
+          placeholder="Search..."
           color="primary"
           v-model="filter"
         >
@@ -111,7 +113,32 @@
   </div>
 </template>
 
-<style>
+<style lang="scss">
+.sticky-header-table {
+  /* height or max-height is important */
+  height: 310px;
+
+  .q-table__top,
+  .q-table__bottom,
+  thead tr:first-child th {
+    /* bg color is important for th; just specify one */
+    background-color: var(--q-dark);
+  }
+
+  thead tr th {
+    position: sticky;
+    z-index: 1;
+  }
+  thead tr:first-child th {
+    top: 0;
+  }
+
+  /* this is when the loading indicator appears */
+  &.q-table--loading thead tr:last-child th {
+    /* height of all previous header rows */
+    top: 48px;
+  }
+}
 </style>
 
 <script>
