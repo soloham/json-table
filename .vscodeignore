@@ -1,0 +1,9 @@
+# Ignore everything
+*
+app/
+**/*.ts
+**/tsconfig.json
+
+# Whitelist what you need
+!.vscodeignore
+!/src/*

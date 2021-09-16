@@ -4,6 +4,10 @@
 
 Demonstrates [JSON Table Editor](https://github.com/SoloHam/json-table) using a custom editor:
 
+## Version 0.0.4
+
+- Drastically reduced package size
+
 ## Version 0.0.3
 
 - Fixed issue with empty screen when switching tabs
