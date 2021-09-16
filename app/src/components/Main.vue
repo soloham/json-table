@@ -241,7 +241,7 @@ export default {
       // Webviews are normally torn down when not visible and re-created when they become visible again.
       // State lets us save information across these re-loads
       const state = vscode.getState();
-      if (state) {
+      if (state && !text.value) {
         updateContent(state.data);
       }
 
@@ -257,6 +257,8 @@ export default {
         const message = event.data; // The json data that the extension sent
         switch (message.type) {
           case "update":
+            updateContent(message);
+
             // Then persist state information.
             // This state is returned in the call to `vscode.getState` below when a webview is reloaded.
             vscode?.setState({ data: message });
