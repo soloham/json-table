@@ -2,7 +2,17 @@
 
 ![JSON Table Editor ](documentation/example.png)
 
+# Usage
+
+- JSON Table can be invoked from the context menu of a JSON file, by choosing "JSON Table Editor" in the Open With options
+- The grid can ne sorted, filtered and can be edited inline.
+- This currently only works on JSON files with an array and finds the first property that's an array to display in the table
+
 Demonstrates [JSON Table Editor](https://github.com/SoloHam/json-table) using a custom editor:
+
+## Version 0.0.5
+
+- Fixed issue with empty table upon initial load
 
 ## Version 0.0.4
 
