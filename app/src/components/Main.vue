@@ -126,9 +126,7 @@ export default {
   name: "Main",
   setup() {
     const name = ref("JSON");
-    const firstElement = computed(() =>
-      Object.keys(text.value).find((x) => Array.isArray(text.value[x]))
-    );
+    const firstElement = ref(null);
 
     const loading = ref(false);
     const loadingData = ref(true);
@@ -138,6 +136,10 @@ export default {
       rowsPerPage: 0,
     });
     const columns = computed(() => {
+      if (!text.value || !firstElement.value) {
+        return [];
+      }
+
       const headers = Object.keys(text.value[firstElement.value][0]);
       return headers?.map((x) => ({
         name: x,
@@ -150,7 +152,9 @@ export default {
       }));
     });
 
-    const rows = computed(() => text.value[firstElement.value]);
+    const rows = computed(() =>
+      text.value && firstElement.value ? text.value[firstElement.value] : []
+    );
 
     const text = ref();
 
@@ -206,6 +210,14 @@ export default {
     // Handle messages sent from the extension to the webview
     onMounted(() => {
       handleMessages();
+
+      // Webviews are normally torn down when not visible and re-created when they become visible again.
+      // State lets us save information across these re-loads
+      const state = vscode.getState();
+      if (state) {
+        updateContent(state.data);
+      }
+
       // @ts-ignore
       const htmlEle = document.documentElement;
       htmlEle.style.height = "98%";
@@ -218,20 +230,27 @@ export default {
         const message = event.data; // The json data that the extension sent
         switch (message.type) {
           case "update":
-            text.value = Hjson.parse(message.text, { keepWsc: true });
-            textDocument.value = message.textDocument;
-
             // Then persist state information.
             // This state is returned in the call to `vscode.getState` below when a webview is reloaded.
-            vscode?.setState({ text });
-            name.value = message.name.substring(
-              message.name.lastIndexOf("\\") + 1
-            );
-
-            loadingData.value = false;
+            vscode?.setState({ data: message });
             return;
         }
       });
+    };
+
+    const updateContent = (data) => {
+      if (!data) {
+        return;
+      }
+      loadingData.value = true;
+
+      text.value = Hjson.parse(data.text, { keepWsc: true });
+      firstElement.value = Object.keys(text.value).find((x) =>
+        Array.isArray(text.value[x])
+      );
+      textDocument.value = data.textDocument;
+      name.value = data.name.substring(data.name.lastIndexOf("\\") + 1);
+      loadingData.value = false;
     };
 
     const saveTextDocument = () => {
@@ -260,6 +279,7 @@ export default {
       pagination,
       selectedRow,
       saveValue,
+      updateContent,
     };
   },
 };
